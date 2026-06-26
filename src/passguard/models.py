@@ -29,6 +29,12 @@ class EntropyResult:
 
 
 @dataclass(slots=True, frozen=True)
+class ScoreResult:
+    score: int
+    strength: "Strength"
+
+
+@dataclass(slots=True, frozen=True)
 class PasswordReport:
     score: int
     strength: str

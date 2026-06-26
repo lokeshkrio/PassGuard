@@ -3,6 +3,7 @@ from passguard.analysis.effective_entropy import EffectiveEntropyAnalyzer
 from passguard.analysis.entropy import EntropyAnalyzer
 from passguard.analysis.pattern.engine import PatternAnalyzer
 from passguard.analysis.pattern.models import PatternResult
+from passguard.analysis.scoring import ScoreAnalyzer
 from passguard.context import AnalysisContext
 from passguard.exceptions import InvalidPasswordError
 from passguard.models import PasswordReport
@@ -15,6 +16,7 @@ class PasswordAnalyzer:
         self.entropy = EntropyAnalyzer()
         self.pattern = PatternAnalyzer()
         self.effective_entropy = EffectiveEntropyAnalyzer()
+        self.score = ScoreAnalyzer()
 
     def analyze(self, password: str) -> PasswordReport:
 
@@ -27,10 +29,13 @@ class PasswordAnalyzer:
         self.entropy.analyze(context)
         self.pattern.analyze(context)
         self.effective_entropy.analyze(context)
+        self.score.analyze(context)
+
+        score = context.require_score()
 
         return PasswordReport(
-            score=0,
-            strength="Unknown",
+            score=score.score,
+            strength=score.strength.value,
             characters=context.require_characters(),
             entropy=context.require_entropy(),
             recommendations=[],

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from passguard.analysis.pattern.models import PatternFinding
-from passguard.models import CharacterAnalysis, EntropyResult
+from passguard.models import CharacterAnalysis, EntropyResult, ScoreResult
 
 
 @dataclass(slots=True)
@@ -9,6 +9,7 @@ class AnalysisContext:
 
     characters: CharacterAnalysis | None = None
     entropy: EntropyResult | None = None
+    score: ScoreResult | None = None
     patterns: list[PatternFinding] = field(default_factory=list)
     pattern_penalty_bits: float = 0.0
 
@@ -21,3 +22,8 @@ class AnalysisContext:
         if self.entropy is None:
             raise RuntimeError("Entropy analysis has not been run.")
         return self.entropy
+
+    def require_score(self) -> ScoreResult:
+        if self.score is None:
+            raise RuntimeError("Score analysis has not been run.")
+        return self.score
