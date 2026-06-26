@@ -43,7 +43,7 @@ class RecommendationEngine:
                 context.recommendations.append(
                     Recommendation(
                         severity=pattern.severity.value,
-                        message=f"Avoid repeating words or blocks of characters."
+                        message="Avoid repeating words or blocks of characters."
                     )
                 )
 

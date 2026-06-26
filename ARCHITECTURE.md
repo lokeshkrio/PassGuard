@@ -71,9 +71,12 @@ The context also exposes guard methods such as `require_entropy()` and
 
 1. `CharacterAnalyzer`
 2. `EntropyAnalyzer`
-3. `PatternAnalyzer`
-4. `EffectiveEntropyAnalyzer`
-5. `ScoreAnalyzer`
+3. `PatternAnalyzer` (includes Sequence & Keyboard Walk detection)
+4. `LeetspeakNormalizer` & `DictionaryAnalyzer`
+5. `EffectiveEntropyAnalyzer`
+6. `ScoreAnalyzer`
+7. `CrackTimeAnalyzer`
+8. `RecommendationEngine`
 
 This order matters because later analyzers depend on earlier analysis.
 
@@ -253,12 +256,8 @@ PassGuard is not yet a complete estimator.
 
 Important missing pieces include:
 
-- Dictionary matching
-- Leetspeak normalization
-- Keyboard walks
-- Sequential letters and digits
-- Crack time estimation
-- Recommendation generation
 - Breach lookup
+- Password policy validation
+- Xato password list integration out of the box (though it can be injected via provider)
 
 These should be added incrementally, with tests and documented algorithms.

@@ -19,20 +19,20 @@ Currently implemented:
 - Theoretical entropy estimation
 - Repeated character detection
 - Repeated substring detection
+- Sequential pattern detection (e.g. 12345, abcde)
+- Keyboard walk detection (e.g. qwerty, asdf)
+- Dictionary matching (pluggable providers for custom lists)
+- Leetspeak normalization for dictionary matches
 - Pattern-adjusted effective entropy
+- Crack time estimation via configurable attack profiles
 - Entropy-based password scoring
+- Actionable recommendation engine
 - Structured report models using dataclasses
 - Strict type checking with mypy
 - Tests with pytest
 
 Planned:
 
-- Dictionary detection
-- Leetspeak normalization
-- Sequential pattern detection
-- Keyboard walk detection
-- Crack time estimation
-- Recommendation engine
 - Password policy validation
 - Exportable reports
 - Breach detection through Have I Been Pwned
@@ -129,15 +129,29 @@ src/passguard/
         entropy.py           # Theoretical entropy
         effective_entropy.py # Pattern-adjusted entropy
         scoring.py           # Score and strength label
+        mutations.py         # Leetspeak normalization
+        recommendations.py   # Actionable feedback engine
 
         pattern/
             engine.py        # Pattern detector orchestration
             models.py        # Pattern result models
             repeated.py      # Repeated character and substring detection
+            sequence.py      # Sequential character detection
+            keyboard.py      # Spatial keyboard walk detection
+        
+        dictionary/
+            analyzer.py      # Dictionary matching
+            models.py        # Dictionary match results
+            provider.py      # Pluggable wordlist providers
+            
+        cracktime/
+            analyzer.py      # Time-to-crack estimation
+            models.py        # Attack profiles
 ```
 
 ## Documentation
 
+- [Detailed Manual](docs.md)
 - [Architecture](ARCHITECTURE.md)
 - [Roadmap](ROADMAP.md)
 

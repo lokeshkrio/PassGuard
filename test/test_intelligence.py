@@ -1,4 +1,3 @@
-import pytest
 from passguard.analyzer import PasswordAnalyzer
 from passguard.analysis.dictionary.provider import SetDictionaryProvider
 from passguard.analysis.cracktime.models import AttackProfile
