@@ -37,31 +37,60 @@ Planned:
 - Exportable reports
 - Breach detection through Have I Been Pwned
 
-## Pipeline Flow
+## Architecture
+
+The following diagram illustrates how the `AnalysisContext` state is passed through and mutated by each analyzer in the pipeline:
 
 ```text
-Password
-    │
-    ▼
-Character Analyzer
-    │
-    ▼
-Entropy Analyzer
-    │
-    ▼
-Pattern Analyzer
-    │
-    ▼
-Dictionary Analyzer
-    │
-    ▼
-Effective Entropy
-    │
-    ▼
-Scoring
-    │
-    ▼
-Recommendations
+                  ┌─────────────────────┐
+                  │    Input Password   │
+                  └──────────┬──────────┘
+                             │
+                             ▼
+                  ┌─────────────────────┐
+                  │   AnalysisContext   │
+                  └──────────┬──────────┘
+                             │
+            ┌────────────────┴────────────────┐
+            ▼                                 ▼
+   ┌─────────────────┐               ┌─────────────────┐
+   │ Character       │               │ Entropy         │
+   │ Analyzer        │               │ Analyzer        │
+   └────────┬────────┘               └────────┬────────┘
+            │                                 │
+            └────────────────┬────────────────┘
+                             │
+                             ▼
+   ┌──────────────────────────────────────────────────┐
+   │ Pattern Analyzer                                 │
+   │  ├─ Repeated Characters  ├─ Repeated Substrings   │
+   │  ├─ Keyboard Walks       ├─ Sequential Runs      │
+   └────────────────────────┬─────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────┐
+   │ Dictionary & Mutation Matcher                    │
+   │  ├─ Leetspeak Normalization                       │
+   │  └─ Pluggable Wordlist Providers                 │
+   └────────────────────────┬─────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────┐
+   │ Final Estimators                                 │
+   │  ├─ Effective Entropy Calculation                │
+   │  ├─ Scoring & Strength Tiers                     │
+   │  └─ Crack Time Profiler                          │
+   └────────────────────────┬─────────────────────────┘
+                            │
+                            ▼
+   ┌──────────────────────────────────────────────────┐
+   │ Recommendation Engine                            │
+   └────────────────────────┬─────────────────────────┘
+                            │
+                            ▼
+                  ┌─────────────────────┐
+                  │   PasswordReport    │
+                  └─────────────────────┘
 ```
 
 ## Requirements
@@ -119,11 +148,44 @@ print(report.entropy.effective_bits)
 The analyzer returns a `PasswordReport` containing:
 
 - `score`: numeric score from 0 to 100
-- `strength`: human-readable strength label
-- `characters`: character composition result
-- `entropy`: theoretical and effective entropy
-- `patterns`: detected weakness patterns, when present
-- `recommendations`: reserved for the future recommendation engine
+- `strength`: human-readable strength label (e.g., "Moderate", "Strong")
+- `characters`: character composition stats (`CharacterAnalysis`)
+- `entropy`: theoretical and effective entropy (`EntropyResult`)
+- `patterns`: detected weakness patterns (`PatternResult`), when present
+- `dictionary_matches`: detected dictionary words (`list[DictionaryMatchResult]`)
+- `crack_times`: estimated time to crack per attack profile (`dict[str, float]`)
+- `recommendations`: actionable list of user warnings and suggestions (`list[Recommendation]`)
+
+### Example Output
+
+When analyzing a password like `Password123!`, the resulting `PasswordReport` object contains structured data:
+
+```python
+report = analyzer.analyze("Password123!")
+
+# Example output access:
+print(f"Score: {report.score}/100")
+print(f"Strength: {report.strength}")
+print(f"Effective Entropy: {report.entropy.effective_bits} bits")
+print(f"Crack Time (Offline fast hash): {report.crack_times['Offline fast hash']} seconds")
+```
+
+Will output:
+
+```text
+Score: 40/100
+Strength: Moderate
+Effective Entropy: 32.55 bits
+Crack Time (Offline fast hash): 0.31 seconds
+
+Patterns Detected:
+- Dictionary match: 'password' (at 0-8)
+- Sequential digits: '123' (at 8-11)
+
+Recommendations:
+- Avoid using common dictionary words.
+- Avoid using sequences like '123'.
+```
 
 ## Core Idea
 
@@ -180,6 +242,14 @@ src/passguard/
 - [Detailed Manual](docs.md)
 - [Architecture](ARCHITECTURE.md)
 - [Roadmap](ROADMAP.md)
+
+## Design Philosophy
+
+PassGuard was intentionally built from first principles rather than wrapping standard estimators like `zxcvbn`. Here is why:
+
+- **Algorithm Transparency**: Standard estimators like `zxcvbn` run as monolithic, opaque blocks. In contrast, PassGuard is structured as a pipeline of independent, trace-friendly steps where you can examine exactly how and why a specific pattern or dictionary match reduced the effective entropy.
+- **Pluggable & Extensible**: Security policies differ across organizations. Instead of using hardcoded English-focused dictionaries or static cracking hardware models, PassGuard allows you to configure your own `DictionaryProvider` (corporate wordlists, user metadata, localized dictionaries) and `AttackProfile` lists directly at initialization.
+- **Separation of Concerns**: State is stored in a mutable, decoupled `AnalysisContext` passed through the pipeline. This ensures each step does one thing and makes unit testing individual detectors trivially easy.
 
 ## Design Principles
 
