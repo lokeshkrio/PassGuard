@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PassGuard — Password Analysis Library</title>
+  <meta name="description" content="PassGuard is a modular, first-principles password strength analysis library for Python." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="container nav-inner">
+    <span class="nav-logo">PassGuard</span>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="reference.html">Reference</a></li>
+      </ul>
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-knob"></span>
+        </span>
+      </button>
+      <a href="https://github.com/lokeshkrio/PassGuard" class="nav-cta">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<header class="hero">
+  <div class="container">
+    <div class="badge">Python 3.13+ · MIT License · Comprehensive Unit Tests</div>
+    <h1>Password analysis<br/>built from first principles</h1>
+    <p>
+      A modular Python library for password analysis built from first principles.
+    </p>
+    <p style="font-size: 0.95rem; font-weight: 500; letter-spacing: 0.02em; color: var(--text-light); margin-top: -12px; margin-bottom: 24px;">
+      Character Analysis &bull; Pattern Detection &bull; Dictionary Matching &bull; Entropy Estimation &bull; Crack-Time Prediction
+    </p>
+    <div class="hero-actions">
+      <a href="#usage" class="btn btn-primary">Quick Start</a>
+      <a href="https://github.com/lokeshkrio/PassGuard" class="btn btn-secondary">View on GitHub</a>
+    </div>
+  </div>
+</header>
+
+<!-- Stats Row -->
+<div class="container">
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">9</div>
+      <div class="stat-label">Pipeline Stages</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Test Coverage</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">49</div>
+      <div class="stat-label">Unit Tests</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Dependencies</div>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<section id="features">
+  <div class="container">
+    <h2 class="section-title">Features</h2>
+    <p class="section-subtitle">A collection of modular, focused analysers that compile comprehensive password telemetry.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>Character Analysis</h3>
+        <p>Classifies characters into lowercase, uppercase, digits, symbols, whitespace, and unicode. Sets the mathematical pool sizes.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Theoretical Entropy</h3>
+        <p>Calculates the traditional <code>L × log₂(pool)</code> entropy representing the theoretical upper bound for random strings.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Structural Recognition</h3>
+        <p>Flags keyboard walks (qwerty, asdf), sequential runs (1234, abcd), repeated characters, and repeating substrings.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Leetspeak Normalisation</h3>
+        <p>Substitutes patterns such as <code>@→a</code> or <code>3→e</code> to identify obscured dictionary matches.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Pluggable Wordlists</h3>
+        <p>Matches candidates against a built-in 100k wordlist or custom corporate lists using set or file loaders.</p>
+      </div>
+      <div class="feature-card">
+        <h3>Effective Entropy</h3>
+        <p>Combines identified sequences and applies mathematical entropy penalties. Prevents overlapping run double-penalties.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Strength Tiers Section -->
+<section id="tiers">
+  <div class="container">
+    <h2 class="section-title">Strength Tiers</h2>
+    <p class="section-subtitle">Standard categories based on final effective entropy bits.</p>
+    <div class="tiers-grid">
+      <div class="tier-card vw">
+        <div class="tier-title">Very Weak</div>
+        <div class="tier-val">&lt; 20</div>
+        <div class="tier-desc">Cracked in milliseconds</div>
+      </div>
+      <div class="tier-card w">
+        <div class="tier-title">Weak</div>
+        <div class="tier-val">20 – 40</div>
+        <div class="tier-desc">Cracked in seconds to hours</div>
+      </div>
+      <div class="tier-card m">
+        <div class="tier-title">Moderate</div>
+        <div class="tier-val">40 – 60</div>
+        <div class="tier-desc">Cracked in days to weeks</div>
+      </div>
+      <div class="tier-card s">
+        <div class="tier-title">Strong</div>
+        <div class="tier-val">60 – 80</div>
+        <div class="tier-desc">Years to crack via hardware</div>
+      </div>
+      <div class="tier-card vs">
+        <div class="tier-title">Very Strong</div>
+        <div class="tier-val">≥ 80</div>
+        <div class="tier-desc">Centuries even with GPU rigs</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Usage Section -->
+<section id="usage">
+  <div class="container">
+    <h2 class="section-title">Usage</h2>
+    <p class="section-subtitle">Get started with basic verification or configure custom dictionary providers and hardware specs.</p>
+    
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="openTab(event, 'basic')">Basic Usage</button>
+      <button class="tab-btn" onclick="openTab(event, 'custom')">Custom Dictionary</button>
+      <button class="tab-btn" onclick="openTab(event, 'profiles')">Custom Profiles</button>
+    </div>
+
+    <div id="basic" class="tab-pane active">
+      <pre><code><span class="kw">from</span> passguard <span class="kw">import</span> PasswordAnalyzer
+      
+# Initialize analyzer with default built-in wordlists
+analyzer = PasswordAnalyzer()
+report = analyzer.analyze(<span class="str">"Password123!"</span>)
+
+<span class="fn">print</span>(report.score)                     <span class="cmt"># Output: 83</span>
+<span class="fn">print</span>(report.strength)                  <span class="cmt"># Output: "Strong"</span>
+<span class="fn">print</span>(report.entropy.effective_bits)    <span class="cmt"># Output: 66.55</span>
+
+<span class="kw">for</span> rec <span class="kw">in</span> report.recommendations:
+    <span class="fn">print</span>(<span class="str">f"[{rec.severity}] {rec.message}"</span>)</code></pre>
+    </div>
+
+    <div id="custom" class="tab-pane">
+      <pre><code><span class="kw">from</span> passguard <span class="kw">import</span> PasswordAnalyzer
+<span class="kw">from</span> passguard.analysis.dictionary.provider <span class="kw">import</span> SetDictionaryProvider
+
+# Create an isolated custom wordlist set provider
+provider = SetDictionaryProvider({<span class="str">"acme"</span>, <span class="str">"admin"</span>, <span class="str">"secret"</span>})
+analyzer = PasswordAnalyzer(dictionary_provider=provider)
+report = analyzer.analyze(<span class="str">"ACME_Corp123!"</span>)
+
+<span class="kw">for</span> m <span class="kw">in</span> report.dictionary_matches:
+    <span class="fn">print</span>(<span class="str">f"Matched word: {m.word} at [{m.start}:{m.end}]"</span>)</code></pre>
+    </div>
+
+    <div id="profiles" class="tab-pane">
+      <pre><code><span class="kw">from</span> passguard <span class="kw">import</span> PasswordAnalyzer
+<span class="kw">from</span> passguard.analysis.cracktime.models <span class="kw">import</span> AttackProfile
+
+# Define custom hardware setups and guess speeds
+profiles = [
+    AttackProfile(<span class="str">"RTX 4090 GPU Array"</span>, 25_000_000_000),
+    AttackProfile(<span class="str">"Attacker Supercomputer"</span>, 500_000_000_000),
+]
+analyzer = PasswordAnalyzer(attack_profiles=profiles)
+report = analyzer.analyze(<span class="str">"MyS3cur3P@ssw0rd!"</span>)
+
+<span class="kw">for</span> name, seconds <span class="kw">in</span> report.crack_times.items():
+    <span class="fn">print</span>(<span class="str">f"{name}: {seconds:.2e}s"</span>)</code></pre>
+    </div>
+
+    <!-- Example output box -->
+    <div style="margin-top: 32px;">
+      <div style="margin-bottom: 12px; font-size: 0.88rem; font-weight: 600; color: var(--text-muted);">
+        Select password type to preview live PassGuard telemetry:
+      </div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+        <button class="preview-btn active" onclick="showPreview('very-weak')">Very Weak</button>
+        <button class="preview-btn" onclick="showPreview('weak')">Weak</button>
+        <button class="preview-btn" onclick="showPreview('moderate')">Moderate</button>
+        <button class="preview-btn" onclick="showPreview('strong')">Strong</button>
+        <button class="preview-btn" onclick="showPreview('very-strong')">Very Strong</button>
+      </div>
+
+      <div class="output-box" style="margin-top: 0;">
+        <div class="output-header">
+          <span>PasswordReport Object Preview</span>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <span id="preview-pwd" style="font-weight: 600;">"123456"</span>
+            <div style="display: inline-flex; border: 1px solid var(--border-dark); border-radius: 4px; overflow: hidden; background: var(--bg); padding: 2px;">
+              <button id="fmt-obj-btn" class="fmt-btn active" onclick="setViewFormat('obj')">Object</button>
+              <button id="fmt-json-btn" class="fmt-btn" onclick="setViewFormat('json')">JSON</button>
+            </div>
+          </div>
+        </div>
+        <div class="output-body">
+          <div id="preview-obj-view">
+            <div class="out-item">
+              <span class="out-k">score</span>
+              <span class="out-v" id="preview-score">5 / 100</span>
+            </div>
+            <div class="out-item">
+              <span class="out-k">strength</span>
+              <span class="out-v" id="preview-strength">Very Weak</span>
+            </div>
+            <div class="out-item">
+              <span class="out-k">theoretical_entropy</span>
+              <span class="out-v" id="preview-theoretical">19.93 bits</span>
+            </div>
+            <div class="out-item">
+              <span class="out-k">effective_entropy</span>
+              <span class="out-v" id="preview-effective">4.32 bits</span>
+            </div>
+            <div class="out-item">
+              <span class="out-k">patterns_detected</span>
+              <span class="out-v" id="preview-patterns">Sequential digits '123456', Keyboard walk '123456'</span>
+            </div>
+            <div class="out-item">
+              <span class="out-k">offline_fast_hash_crack_time</span>
+              <span class="out-v" id="preview-crack">9.99e-10 seconds (< 0.0001 seconds)</span>
+            </div>
+            <div class="out-item" style="flex-direction: column; align-items: flex-start; border-bottom: none; padding-top: 12px;">
+              <span class="out-k" style="margin-bottom: 6px;">recommendations</span>
+              <div id="preview-recs" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; width: 100%;">
+                <!-- Loaded dynamically -->
+              </div>
+            </div>
+          </div>
+          <div id="preview-json-view" style="display: none;">
+            <pre style="background: none; padding: 0; margin: 0; border-radius: 0; overflow-x: auto; box-shadow: none;"><code id="json-code-block" style="color: inherit; font-size: 0.84rem; line-height: 1.5; white-space: pre;"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <span class="nav-logo">PassGuard</span>
+      <p style="font-size: 0.78rem; margin-top: 4px;">Modular password analysis from first principles.</p>
+    </div>
+    <div>
+      Built by <strong>Lokesh</strong> · 
+      <a href="https://github.com/lokeshkrio/PassGuard">GitHub</a> · 
+      <a href="reference.html">Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PassGuard — API Reference &amp; Verification</title>
+  <meta name="description" content="Technical details, API reference, verification metrics, and integration code examples for PassGuard." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="container nav-inner">
+    <span class="nav-logo">PassGuard</span>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="architecture.html">Architecture</a></li>
+        <li><a href="docs.html" class="active">Reference</a></li>
+      </ul>
+      <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
+        <span class="theme-toggle-track">
+          <span class="theme-toggle-knob"></span>
+        </span>
+      </button>
+      <a href="https://github.com/lokeshkrio/PassGuard" class="nav-cta">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<!-- API Section -->
+<section id="api">
+  <div class="container">
+    <h2 class="section-title">API Reference</h2>
+    <p class="section-subtitle">Exposes completely defined types and frozen dataclass fields.</p>
+
+    <details open style="cursor: pointer; outline: none;">
+      <summary style="font-size: 0.95rem; font-weight: 600; color: var(--accent); outline: none; margin-bottom: 24px;">View API Details &amp; Fields &rarr;</summary>
+      
+      <div style="cursor: default;">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code class="inline">score</code></td>
+                <td><code>int</code></td>
+                <td>Calculated strength score mapping to a 0–100 scale.</td>
+              </tr>
+              <tr>
+                <td><code class="inline">strength</code></td>
+                <td><code>str</code></td>
+                <td>Matching category tier description matching entropy levels.</td>
+              </tr>
+              <tr>
+                <td><code class="inline">entropy.theoretical_bits</code></td>
+                <td><code>float</code></td>
+                <td>Baseline entropy assuming random choices and full set pools.</td>
+              </tr>
+              <tr>
+                <td><code class="inline">entropy.effective_bits</code></td>
+                <td><code>float</code></td>
+                <td>Pattern adjusted final bit calculations after deductions.</td>
+              </tr>
+              <tr>
+                <td><code class="inline">dictionary_matches</code></td>
+                <td><code>list[DictionaryMatchResult]</code></td>
+                <td>Instances of detected dictionary substrings and replacements.</td>
+              </tr>
+              <tr>
+                <td><code class="inline">recommendations</code></td>
+                <td><code>list[Recommendation]</code></td>
+                <td>Deduplicated list of warnings and improvement guidelines.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 style="font-size: 1.15rem; font-weight: 700; margin: 32px 0 12px;">Default Attack Profiles</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Profile</th>
+                <th>Speed</th>
+                <th>Description / Scenario</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Online throttled</td>
+                <td><code>10 / sec</code></td>
+                <td>Rate-limiting systems preventing quick sequences.</td>
+              </tr>
+              <tr>
+                <td>Online unthrottled</td>
+                <td><code>1,000 / sec</code></td>
+                <td>Login processes without standard timeout protections.</td>
+              </tr>
+              <tr>
+                <td>Offline slow hash</td>
+                <td><code>10,000 / sec</code></td>
+                <td>Security schemes using Argon2, bcrypt, or scrypt.</td>
+              </tr>
+              <tr>
+                <td>Offline fast hash</td>
+                <td><code>10,000,000,000 / sec</code></td>
+                <td>GPU rigs checking algorithms like MD5 or SHA-1.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- Project Structure Section -->
+<section id="structure">
+  <div class="container">
+    <h2 class="section-title">Project Structure</h2>
+    <p class="section-subtitle">A standardized Python package src layout.</p>
+    <div class="file-tree">
+      <div><span class="tree-dir">src/passguard/</span></div>
+      <div class="tree-indent"><span class="tree-file">analyzer.py</span> <span class="tree-cmt"># Pipeline context manager</span></div>
+      <div class="tree-indent"><span class="tree-file">context.py</span> <span class="tree-cmt"># AnalysisContext instance state</span></div>
+      <div class="tree-indent"><span class="tree-file">models.py</span> <span class="tree-cmt"># Public frozen dataclasses</span></div>
+      <div class="tree-indent"><span class="tree-dir">analysis/</span></div>
+      <div class="tree-indent tree-indent"><span class="tree-file">charset.py</span> <span class="tree-cmt"># Set pooling classifications</span></div>
+      <div class="tree-indent tree-indent"><span class="tree-file">entropy.py</span> <span class="tree-cmt"># Theoretical bit math</span></div>
+      <div class="tree-indent tree-indent"><span class="tree-file">effective_entropy.py</span> <span class="tree-cmt"># Pattern penalty mathematics</span></div>
+      <div class="tree-indent tree-indent"><span class="tree-file">recommendations.py</span> <span class="tree-cmt"># Context tip generators</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Verification & Test Results Section -->
+<section id="verification">
+  <div class="container">
+    <h2 class="section-title">Verification &amp; Test Results</h2>
+    <p class="section-subtitle">PassGuard is built with test-driven development from day one. Below are the verified metrics from our test pipeline.</p>
+    
+    <div style="background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: var(--radius-lg); padding: 24px;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #16a34a; font-weight: bold; font-size: 1.2rem;">✓</span>
+          <span style="font-size: 0.9rem; font-weight: 600;">49 Unit Tests Passed</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #16a34a; font-weight: bold; font-size: 1.2rem;">✓</span>
+          <span style="font-size: 0.9rem; font-weight: 600;">100% Statement Coverage</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #16a34a; font-weight: bold; font-size: 1.2rem;">✓</span>
+          <span style="font-size: 0.9rem; font-weight: 600;">Mypy Strict Checked</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #16a34a; font-weight: bold; font-size: 1.2rem;">✓</span>
+          <span style="font-size: 0.9rem; font-weight: 600;">Ruff Lints Clean (0 Warnings)</span>
+        </div>
+      </div>
+      
+      <details style="cursor: pointer; outline: none;">
+        <summary style="font-size: 0.85rem; font-weight: 600; color: var(--accent); outline: none; margin-top: 12px;">View Coverage Report by Module &rarr;</summary>
+        <div class="table-wrapper" style="margin-top: 16px; cursor: default;">
+          <table>
+            <thead>
+              <tr>
+                <th>Module Name</th>
+                <th>Statements</th>
+                <th>Missed</th>
+                <th>Coverage</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>passguard/analysis/charset.py</code></td><td>25</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/entropy.py</code></td><td>25</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/effective_entropy.py</code></td><td>59</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/scoring.py</code></td><td>22</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/mutations.py</code></td><td>15</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/recommendations.py</code></td><td>30</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/pattern/engine.py</code></td><td>15</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/pattern/keyboard.py</code></td><td>29</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/pattern/repeated.py</code></td><td>83</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/pattern/sequence.py</code></td><td>37</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/dictionary/analyzer.py</code></td><td>26</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+              <tr><td><code>passguard/analysis/cracktime/analyzer.py</code></td><td>15</td><td>0</td><td style="color:#16a34a; font-weight:600;">100%</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- Full Integration Example Section -->
+<section id="full-example">
+  <div class="container">
+    <h2 class="section-title">Full Integration Example</h2>
+    <p class="section-subtitle">Below is a fully functional script demonstrating custom configurations, dictionary matches, and full report parsing.</p>
+    
+    <pre><code><span class="kw">from</span> passguard <span class="kw">import</span> PasswordAnalyzer
+<span class="kw">from</span> passguard.analysis.dictionary.provider <span class="kw">import</span> SetDictionaryProvider
+<span class="kw">from</span> passguard.analysis.cracktime.models <span class="kw">import</span> AttackProfile
+
+# 1. Custom dictionary setup (banned company / brand names)
+banned_words = {<span class="str">"corporate"</span>, <span class="str">"lokesh"</span>, <span class="str">"passguard"</span>}
+custom_dict = SetDictionaryProvider(banned_words)
+
+# 2. Configured custom attack vectors
+attack_scenarios = [
+    AttackProfile(<span class="str">"Attacker Supercomputer"</span>, 500_000_000_000),
+    AttackProfile(<span class="str">"Attacker RTX 4090"</span>, 25_000_000_000),
+]
+
+# 3. Instantiate analyzer and execute pass analysis
+analyzer = PasswordAnalyzer(
+    dictionary_provider=custom_dict, 
+    attack_profiles=attack_scenarios
+)
+report = analyzer.analyze(<span class="str">"L0k3sh_PassGuard_123!"</span>)
+
+# 4. Parse output models and inspect properties
+<span class="fn">print</span>(<span class="str">f"Analyzed Password:  {report.password}"</span>)
+<span class="fn">print</span>(<span class="str">f"Overall Score:      {report.score}/100"</span>)
+<span class="fn">print</span>(<span class="str">f"Security Strength:  {report.strength}"</span>)
+<span class="fn">print</span>(<span class="str">f"Theoretical Bits:   {report.entropy.theoretical_bits:.2f} bits"</span>)
+<span class="fn">print</span>(<span class="str">f"Effective Bits:     {report.entropy.effective_bits:.2f} bits"</span>)
+
+# 5. Loop through identified dictionary words
+<span class="kw">if</span> report.dictionary_matches:
+    <span class="fn">print</span>(<span class="str">"\nDictionary Matches:"</span>)
+    <span class="kw">for</span> match <span class="kw">in</span> report.dictionary_matches:
+        <span class="fn">print</span>(<span class="str">f"  - '{match.word}' at index [{match.start}:{match.end}]"</span>)
+
+# 6. Print actionable recommendations
+<span class="kw">if</span> report.recommendations:
+    <span class="fn">print</span>(<span class="str">"\nActionable Recommendations:"</span>)
+    <span class="kw">for</span> rec <span class="kw">in</span> report.recommendations:
+        <span class="fn">print</span>(<span class="str">f"  - [{rec.severity}] {rec.message}"</span>)</code></pre>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container footer-inner">
+    <div>
+      <span class="nav-logo">PassGuard</span>
+      <p style="font-size: 0.78rem; margin-top: 4px;">Modular password analysis from first principles.</p>
+    </div>
+    <div>
+      Built by <strong>Lokesh</strong> · 
+      <a href="https://github.com/lokeshkrio/PassGuard">GitHub</a> · 
+      <a href="docs.html">Docs</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
