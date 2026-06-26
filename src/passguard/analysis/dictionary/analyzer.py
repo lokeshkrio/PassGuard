@@ -1,9 +1,9 @@
-from passguard.context import AnalysisContext
 from passguard.analysis.dictionary.models import DictionaryMatchResult
 from passguard.analysis.dictionary.provider import (
-    DictionaryProvider,
     BuiltinDictionaryProvider,
+    DictionaryProvider,
 )
+from passguard.context import AnalysisContext
 
 
 class DictionaryAnalyzer:

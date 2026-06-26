@@ -1,15 +1,16 @@
 from __future__ import annotations
+
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from passguard.analysis.pattern.models import PatternFinding
     from passguard.analysis.dictionary.models import DictionaryMatchResult
+    from passguard.analysis.pattern.models import PatternFinding
     from passguard.models import (
         CharacterAnalysis,
         EntropyResult,
-        ScoreResult,
         Recommendation,
+        ScoreResult,
     )
 
 

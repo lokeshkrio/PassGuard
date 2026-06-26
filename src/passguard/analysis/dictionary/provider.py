@@ -1,5 +1,6 @@
-from typing import Collection, Protocol
 import pathlib
+from collections.abc import Collection
+from typing import Protocol
 
 
 class DictionaryProvider(Protocol):

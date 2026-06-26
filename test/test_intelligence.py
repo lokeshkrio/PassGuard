@@ -1,6 +1,6 @@
-from passguard.analyzer import PasswordAnalyzer
-from passguard.analysis.dictionary.provider import SetDictionaryProvider
 from passguard.analysis.cracktime.models import AttackProfile
+from passguard.analysis.dictionary.provider import SetDictionaryProvider
+from passguard.analyzer import PasswordAnalyzer
 
 
 def test_keyboard_walk_and_sequence():

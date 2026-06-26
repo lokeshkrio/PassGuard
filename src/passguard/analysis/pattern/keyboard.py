@@ -1,10 +1,9 @@
-from passguard.context import AnalysisContext
 from passguard.analysis.pattern.models import (
     PatternFinding,
     PatternSeverity,
     PatternType,
 )
-
+from passguard.context import AnalysisContext
 
 # Adjacency map for standard QWERTY keyboard
 QWERTY_MAP = {
@@ -72,14 +71,12 @@ class KeyboardWalkDetector:
             if prev in QWERTY_MAP and curr in QWERTY_MAP[prev]:
                 continue
             else:
-                self._evaluate(context, pwd, walk_start, i)
+                self._evaluate(context, walk_start, i)
                 walk_start = i
 
-        self._evaluate(context, pwd, walk_start, len(pwd))
+        self._evaluate(context, walk_start, len(pwd))
 
-    def _evaluate(
-        self, context: AnalysisContext, pwd: str, start: int, end: int
-    ) -> None:
+    def _evaluate(self, context: AnalysisContext, start: int, end: int) -> None:
         length = end - start
         if length >= self.min_length:
             walk_str = context.password[start:end]

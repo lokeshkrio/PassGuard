@@ -87,14 +87,19 @@ Located in [mutations.py](file:///d:/LK/py/password-analyser/src/passguard/analy
 ### 2.5 Dictionary Matching (`DictionaryAnalyzer`)
 Located in the [dictionary](file:///d:/LK/py/password-analyser/src/passguard/analysis/dictionary/) directory, this scans both the original password and mutated candidates against a dictionary list.
 * It checks for both **exact matches** and **substring matches** (for substrings of length $\ge 3$).
+* **Complexity**: It runs in $O(L^2)$ time complexity relative to the password length $L$ to slice substring candidates, performing an $O(1)$ set lookup check against the loaded dictionary wordlist.
 * It uses a pluggable [DictionaryProvider](file:///d:/LK/py/password-analyser/src/passguard/analysis/dictionary/provider.py) architecture, allowing set-based, file-based, or built-in dictionary checks (which default to a built-in top 1000 common passwords file).
 
 ### 2.6 Effective Entropy Calculation (`EffectiveEntropyAnalyzer`)
-Located in [effective_entropy.py](file:///d:/LK/py/password-analyser/src/passguard/analysis/effective_entropy.py), this modifies the entropy bits based on structural pattern findings. Instead of calculating entropy assuming full independence, it computes:
+Located in [effective_entropy.py](file:///d:/LK/py/password-analyser/src/passguard/analysis/effective_entropy.py), this modifies the entropy bits based on structural pattern findings. To prevent double-penalizing overlapping patterns (e.g. when sequence `abc` overlaps with repeated substring `abcabcabc`), it sorts patterns by span length descending and tracks covered indices. It computes:
 * **Repeated Character Pattern Cost:**
   $$\text{estimated\_bits} = \log_2(H_{charset}) + \log_2(\text{run\_length})$$
 * **Repeated Substring Pattern Cost:**
   $$\text{estimated\_bits} = (\text{unit\_length} \times \log_2(H_{charset})) + \log_2(\text{repeat\_count})$$
+* **Keyboard Walk Pattern Cost:**
+  $$\text{estimated\_bits} = \log_2(H_{charset}) + (\text{walk\_length} - 1) \times 1.5$$
+* **Sequential Run Pattern Cost:**
+  $$\text{estimated\_bits} = \log_2(H_{charset}) + 1.0$$
 * **Penalty:**
   $$\text{penalty} = \text{independent\_bits} - \text{estimated\_bits}$$
   $$\text{effective\_bits} = \max(\text{theoretical\_bits} - \sum \text{penalties}, 0.0)$$

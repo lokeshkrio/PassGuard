@@ -1,7 +1,8 @@
 from dataclasses import dataclass, field
 from enum import Enum
-from passguard.analysis.pattern.models import PatternResult
+
 from passguard.analysis.dictionary.models import DictionaryMatchResult
+from passguard.analysis.pattern.models import PatternResult
 
 
 @dataclass(slots=True, frozen=True)

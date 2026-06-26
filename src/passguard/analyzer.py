@@ -1,13 +1,13 @@
 from passguard.analysis.charset import CharacterAnalyzer
+from passguard.analysis.cracktime import AttackProfile, CrackTimeAnalyzer
+from passguard.analysis.dictionary import DictionaryAnalyzer, DictionaryProvider
 from passguard.analysis.effective_entropy import EffectiveEntropyAnalyzer
 from passguard.analysis.entropy import EntropyAnalyzer
+from passguard.analysis.mutations import LeetspeakNormalizer
 from passguard.analysis.pattern.engine import PatternAnalyzer
 from passguard.analysis.pattern.models import PatternResult
-from passguard.analysis.scoring import ScoreAnalyzer
-from passguard.analysis.dictionary import DictionaryAnalyzer, DictionaryProvider
-from passguard.analysis.mutations import LeetspeakNormalizer
-from passguard.analysis.cracktime import CrackTimeAnalyzer, AttackProfile
 from passguard.analysis.recommendations import RecommendationEngine
+from passguard.analysis.scoring import ScoreAnalyzer
 from passguard.context import AnalysisContext
 from passguard.exceptions import InvalidPasswordError
 from passguard.models import PasswordReport

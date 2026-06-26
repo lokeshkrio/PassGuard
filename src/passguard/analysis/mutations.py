@@ -32,6 +32,5 @@ class LeetspeakNormalizer:
             else:
                 normalized += char
 
-        if substituted:
-            if normalized not in context.normalized_passwords:
-                context.normalized_passwords.append(normalized)
+        if substituted and normalized not in context.normalized_passwords:
+            context.normalized_passwords.append(normalized)

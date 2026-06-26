@@ -1,9 +1,9 @@
-from passguard.context import AnalysisContext
 from passguard.analysis.pattern.models import (
     PatternFinding,
     PatternSeverity,
     PatternType,
 )
+from passguard.context import AnalysisContext
 
 
 class SequenceDetector:
@@ -26,21 +26,19 @@ class SequenceDetector:
                     seq_dir = diff
                 elif seq_dir != diff:
                     # Direction changed, evaluate the previous sequence
-                    self._evaluate(context, pwd, seq_start, i)
+                    self._evaluate(context, seq_start, i)
                     seq_start = i - 1
                     seq_dir = diff
             else:
                 if seq_dir != 0:
-                    self._evaluate(context, pwd, seq_start, i)
+                    self._evaluate(context, seq_start, i)
                 seq_start = i
                 seq_dir = 0
 
         if seq_dir != 0:
-            self._evaluate(context, pwd, seq_start, len(pwd))
+            self._evaluate(context, seq_start, len(pwd))
 
-    def _evaluate(
-        self, context: AnalysisContext, pwd: str, start: int, end: int
-    ) -> None:
+    def _evaluate(self, context: AnalysisContext, start: int, end: int) -> None:
         length = end - start
         if length >= self.min_length:
             seq_str = context.password[start:end]

@@ -1,12 +1,14 @@
 import pytest
+
+from passguard.analysis.cracktime.models import AttackProfile
+from passguard.analysis.dictionary.provider import FileDictionaryProvider
+from passguard.analysis.entropy import EntropyAnalyzer
+from passguard.analysis.pattern.keyboard import KeyboardWalkDetector
+from passguard.analysis.pattern.models import PatternSeverity, PatternType
+from passguard.analysis.pattern.repeated import RepeatedSubstringDetector
 from passguard.analyzer import PasswordAnalyzer
 from passguard.context import AnalysisContext
 from passguard.exceptions import InvalidPasswordError
-from passguard.analysis.entropy import EntropyAnalyzer
-from passguard.analysis.cracktime.models import AttackProfile
-from passguard.analysis.dictionary.provider import FileDictionaryProvider
-from passguard.analysis.pattern.keyboard import KeyboardWalkDetector
-from passguard.analysis.pattern.repeated import RepeatedSubstringDetector
 
 
 def test_invalid_password_type() -> None:
@@ -110,3 +112,94 @@ def test_dictionary_analyzer_empty_words() -> None:
     context = AnalysisContext(password="password")
     analyzer.analyze(context)
     assert not context.dictionary_matches
+
+
+def test_walk_and_sequence_reduces_entropy() -> None:
+    analyzer = PasswordAnalyzer()
+    report = analyzer.analyze("qwerty12345")
+    assert report.entropy.effective_bits < report.entropy.theoretical_bits
+    assert report.patterns is not None
+    assert report.patterns.penalty > 0
+
+
+def test_effective_entropy_edge_cases() -> None:
+    from passguard.analysis.effective_entropy import EffectiveEntropyAnalyzer
+    from passguard.analysis.pattern.models import (
+        PatternFinding,
+        PatternSeverity,
+    )
+
+    analyzer = EffectiveEntropyAnalyzer()
+
+    # 1. Empty span in finding (start == end)
+    context_empty = AnalysisContext(password="abc")
+    finding_empty = PatternFinding(
+        type=PatternType.REPEATED_CHARACTER,
+        severity=PatternSeverity.LOW,
+        start=1,
+        end=1,
+        description="Empty",
+    )
+    context_empty.patterns.append(finding_empty)
+    # Mock entropy to run the analyzer
+    from passguard.models import EntropyResult
+
+    context_empty.entropy = EntropyResult(10.0, 10.0, 26)
+    analyzer.analyze(context_empty)
+    assert context_empty.entropy.effective_bits == 10.0
+
+    # 2. Match fallthrough for unhandled pattern type (e.g. None)
+    context_fallthrough = AnalysisContext(password="abc")
+    finding_fall = PatternFinding(
+        type=None,  # type: ignore
+        severity=PatternSeverity.LOW,
+        start=0,
+        end=3,
+        description="Fallthrough",
+    )
+    context_fallthrough.patterns.append(finding_fall)
+    context_fallthrough.entropy = EntropyResult(10.0, 10.0, 26)
+    analyzer.analyze(context_fallthrough)
+    assert context_fallthrough.entropy.effective_bits == 10.0
+
+    # 3. Direct call to _repeated_substring_bits with no unit
+    bits = analyzer._repeated_substring_bits(span="abcdef", bits_per_character=5.0)
+    assert bits == 30.0  # 6 * 5.0
+
+
+def test_sequence_detector_edge_cases() -> None:
+    from passguard.analysis.pattern.sequence import SequenceDetector
+
+    detector = SequenceDetector()
+
+    # 1. Password shorter than min_length
+    context_short = AnalysisContext(password="12")
+    detector.analyze(context_short)
+    assert not context_short.patterns
+
+    # 2. Sequence direction change (e.g. "abcba")
+    context_direction = AnalysisContext(password="abcba")
+    detector.analyze(context_direction)
+    # "abc" (length 3, 0-3) and "cba" (length 3, 2-5)
+    assert len(context_direction.patterns) >= 2
+
+    # 3. Sequence of length == 4 (medium severity)
+    context_medium = AnalysisContext(password="1234")
+    detector.analyze(context_medium)
+    assert len(context_medium.patterns) == 1
+    assert context_medium.patterns[0].severity == PatternSeverity.MEDIUM
+
+
+def test_repeated_substring_detector_better_match_branches() -> None:
+    detector = RepeatedSubstringDetector()
+
+    # candidate repeats == current repeats, but candidate span != current span
+    cand1 = ("abc", 2, 6)  # repeats=2, span=6
+    curr1 = ("ab", 2, 4)  # repeats=2, span=4
+    assert detector._is_better_match(cand1, curr1) is True
+
+    # repeats and span are equal, compare unit length
+    cand2 = ("abcabc", 2, 12)  # unit len 6, repeats 2, span 12
+    curr2 = ("abcdef", 2, 12)  # unit len 6, repeats 2, span 12 (same, will compare len)
+    # len(candidate_unit) < len(current_unit) is False because both are 6
+    assert detector._is_better_match(cand2, curr2) is False

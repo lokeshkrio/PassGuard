@@ -1,4 +1,4 @@
 from passguard.analysis.cracktime.analyzer import CrackTimeAnalyzer
-from passguard.analysis.cracktime.models import AttackProfile, DEFAULT_PROFILES
+from passguard.analysis.cracktime.models import DEFAULT_PROFILES, AttackProfile
 
-__all__ = ["CrackTimeAnalyzer", "AttackProfile", "DEFAULT_PROFILES"]
+__all__ = ["DEFAULT_PROFILES", "AttackProfile", "CrackTimeAnalyzer"]

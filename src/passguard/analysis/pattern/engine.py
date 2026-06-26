@@ -1,9 +1,9 @@
+from passguard.analysis.pattern.keyboard import KeyboardWalkDetector
 from passguard.analysis.pattern.repeated import (
     RepeatedCharacterDetector,
     RepeatedSubstringDetector,
 )
 from passguard.analysis.pattern.sequence import SequenceDetector
-from passguard.analysis.pattern.keyboard import KeyboardWalkDetector
 from passguard.context import AnalysisContext
 
 

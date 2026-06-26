@@ -1,6 +1,6 @@
 from passguard import PasswordAnalyzer
-from passguard.analysis.dictionary.provider import SetDictionaryProvider
 from passguard.analysis.cracktime.models import AttackProfile
+from passguard.analysis.dictionary.provider import SetDictionaryProvider
 
 
 def main() -> None:

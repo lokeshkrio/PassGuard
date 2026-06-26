@@ -1,5 +1,5 @@
+from passguard.analysis.cracktime.models import DEFAULT_PROFILES, AttackProfile
 from passguard.context import AnalysisContext
-from passguard.analysis.cracktime.models import AttackProfile, DEFAULT_PROFILES
 
 
 class CrackTimeAnalyzer:

@@ -1,4 +1,5 @@
 import pytest
+
 from passguard.analysis.pattern.models import PatternSeverity, PatternType
 from passguard.analysis.pattern.repeated import RepeatedCharacterDetector
 from passguard.context import AnalysisContext
